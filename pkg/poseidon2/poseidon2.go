@@ -13,32 +13,13 @@ func addFullRoundConstants(p *big.Int, x []*big.Int, extConst []*big.Int) []*big
 		panic("Input length does not equal constant width")
 	}
 
-	output := make([]*big.Int, len(x))
-	copy(output, x)
-
 	for i := 0; i < len(extConst); i++ {
-		output[i] = new(big.Int).Add(output[i], extConst[i])
-		output[i] = new(big.Int).Mod(output[i], p)
+		x[i].Add(x[i], extConst[i])
+		x[i].Mod(x[i], p)
 	}
 
-	return output
+	return x
 }
-
-/* THIS IS UNUSED FUNCTION FOR NOW
-// This function is specifically used to add the partial round constants
-func addPartialRoundConstants(p *big.Int, x []*big.Int, intConst []*big.Int) []*big.Int {
-
-	output := make([]*big.Int, len(x))
-	copy(output, x)
-
-	for i := 0; i < len(intConst); i++ {
-		output[0] = new(big.Int).Add(output[0], intConst[i])
-		output[0] = new(big.Int).Mod(output[0], p)
-	}
-
-	return output
-}
-*/
 
 func matrixMultiply(p *big.Int, x []*big.Int, extMatrix [][]*big.Int) []*big.Int {
 	output := make([]*big.Int, len(x))
@@ -47,7 +28,7 @@ func matrixMultiply(p *big.Int, x []*big.Int, extMatrix [][]*big.Int) []*big.Int
 	// The sum of those values mod p, takes the place of x[i] with i representing the row number
 	for i := 0; i < len(x); i++ {
 		acc := new(big.Int)
-		for j := 0; j < len(extMatrix); j++ {
+		for j := 0; j < len(extMatrix[i]); j++ {
 			prod := new(big.Int).Mul(extMatrix[i][j], x[j])
 			acc = acc.Add(acc, prod)
 		}
@@ -95,8 +76,8 @@ func Poseidon2Hash(x []*big.Int) []*big.Int {
 	// FIRST SET OF EXTERNAL ROUNDS
 
 	log.Println("Starting External Round 1......")
-	ext1Const := make([][]*big.Int, len(params.C.Ce)/2)
-	copy(ext1Const, params.C.Ce[0:len(params.C.Ce)/2])
+	ext1Const := params.C.Ce[:len(params.C.Ce)/2]
+
 	log.Println("ext1Const: ", ext1Const)
 	
 	for i := 0; i < len(ext1Const); i++ {
@@ -150,8 +131,7 @@ func Poseidon2Hash(x []*big.Int) []*big.Int {
 
 	log.Println("Starting External Round 2......")
 
-	ext2Const := make([][]*big.Int, len(params.C.Ce)/2)
-	copy(ext2Const, params.C.Ce[len(params.C.Ce)/2:])
+	ext2Const := params.C.Ce[len(params.C.Ce)/2:]
 
 	for i := 0; i < len(ext2Const); i++ {
 		// Handle the constants
