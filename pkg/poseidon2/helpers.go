@@ -73,3 +73,63 @@ func formatMatrix(m [][]string, p *big.Int, t int) [][]*big.Int {
 
 	return newMatrix 
 }
+
+
+func modularArithmeticAdd(a, b, p int) int {
+	return (a + b) % p
+}
+
+func modularAritmethicMultiply(a, b, p int) int {
+	return (a * b) % p
+}
+
+func modularArithmeticPower(a, b, p int) int {
+	var result int = 0
+	for i := 0; i < b; i++ {
+		result = (result * a)
+	}
+
+	return result % p
+}
+
+func matrixMultiplication(matrix [][]int, input []int, p int) []int {
+	result := make([]int, len(input))
+
+	for i := 0; i < len(input); i++ {
+		var v int = 0
+		for j := 0; j < len(input); j++ {
+			v = (v + (matrix[i][j] * input[j]))
+		}
+		result[i] = v % p
+	}
+
+	return result
+}
+
+func calculateBranchNumber(matrix [][]int, input []int, p int) int {
+	hw := 0  // hammering weight of input
+	hwm := 0 // hammering weight of matrix
+
+	// calculate hammering weight for input
+	for _, val := range input {
+		if val%p != 0 {
+			hw++
+		}
+	}
+
+	// calculate hammering weight for matrix
+	result := make([]int, len(input))
+	for i := 0; i < len(input); i++ {
+
+		val := 0
+		for j := 0; j < len(matrix); j++ {
+			val = val + (matrix[i][j] * input[j])
+		}
+		result[i] = val % p
+		if result[i] != 0 {
+			hwm++
+		}
+	}
+
+	return hw + hwm
+}
