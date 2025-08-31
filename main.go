@@ -82,7 +82,7 @@ func main() {
 	// Your main application logic will go here
 	log.Println("Application started successfully")
 
-	output := poseidon2.Poseidon2Hash(x)
+	output := poseidon2.Poseidon2Permutation(x)
 
 	log.Println("Output: ", output)
 

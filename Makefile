@@ -24,6 +24,10 @@ test:
 	@echo "Running tests..."
 	go test -v ./...
 
+test-coverage: 
+	@echo "Getting test coverage report....."
+	go test -cover ./...
+
 # Clean build artifacts 
 clean:
 	@echo "Cleaning..."

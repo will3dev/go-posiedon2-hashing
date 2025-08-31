@@ -40,7 +40,7 @@ func matrixMultiply(p *big.Int, x []*big.Int, extMatrix [][]*big.Int) []*big.Int
 
 }
 
-func Poseidon2Hash(x []*big.Int) []*big.Int {
+func Poseidon2Permutation(x []*big.Int) []*big.Int {
 	var params Poseidon2Params
 	if len(x) == 3 {
 		params = poseidon2ParamsT3
@@ -157,4 +157,11 @@ func Poseidon2Hash(x []*big.Int) []*big.Int {
 	}
 
 	return output
+}
+
+// Used to generate the poseidon hash of a set of inputs.
+func Poseidon2Hash(x []*big.Int) *big.Int {
+	out := Poseidon2Permutation(x)
+	// The hash value is just position 0
+	return out[0]
 }
