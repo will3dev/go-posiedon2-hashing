@@ -7,11 +7,13 @@ var c = []string{"0x1d066a255517b7fd8bddd3a93f7804ef7f8fcde48bb4c37a59a09a1a9705
 var T = int(3)
 
 var FP = FieldParams{
-	P: func() *big.Int{
+	P: func() *big.Int {
 		z, ok := new(big.Int).SetString("21888242871839275222246405745257275088548364400416034343698204186575808495617", 10)
-		if !ok { panic("conversion failed") }
+		if !ok {
+			panic("conversion failed")
+		}
 		return z
-	} (),
+	}(),
 	D: uint64(5),
 }
 
@@ -27,19 +29,20 @@ var C = Constants{
 	Ci: intConsts,
 }
 
-var unformattedMatrix = [][]string{{"0x09600146bec7f4fd625ea9db1f247c6376f479f8fa4b34f1227f14ac41bc4cd3", "0x1eb832b908b873be41b430e81e9f5fa648080f6a139f5a64570e848cb09c9292", "0x00868c3677aaeb8a5b01fc0c44f5d2367a26db160ae28eb98b63cccbea20d8af"},{"0x0b9a382db8289f520ece763cbb2094c444663a2bf55db56999a4614a96504ebe", "0x2de7772476f303a6d2879cdcc47c1113ef4e1936fb876d034bbcda5acdc435ec", "0x27948d4bcb6d665205572ebbde236b7624da6487f1b18fdbbc44e7a2dd3d793d"},{"0x1fcefc218b5675feed028865d2f9ef22a1e31f41f7ce7631f645471265344dc4", "0x0d7b02b0f922e679dfd828024c17296596770fdc936f9b16ae612716ce444b3b", "0x1ee23b55636874a2ca16a9f3c1f9bc4ff17410f229a1271d46fdc664ee4511c7"}}
+var unformattedMatrix = [][]string{{"0x09600146bec7f4fd625ea9db1f247c6376f479f8fa4b34f1227f14ac41bc4cd3", "0x1eb832b908b873be41b430e81e9f5fa648080f6a139f5a64570e848cb09c9292", "0x00868c3677aaeb8a5b01fc0c44f5d2367a26db160ae28eb98b63cccbea20d8af"}, {"0x0b9a382db8289f520ece763cbb2094c444663a2bf55db56999a4614a96504ebe", "0x2de7772476f303a6d2879cdcc47c1113ef4e1936fb876d034bbcda5acdc435ec", "0x27948d4bcb6d665205572ebbde236b7624da6487f1b18fdbbc44e7a2dd3d793d"}, {"0x1fcefc218b5675feed028865d2f9ef22a1e31f41f7ce7631f645471265344dc4", "0x0d7b02b0f922e679dfd828024c17296596770fdc936f9b16ae612716ce444b3b", "0x1ee23b55636874a2ca16a9f3c1f9bc4ff17410f229a1271d46fdc664ee4511c7"}}
 
 var extMatrix = formatMatrix(unformattedMatrix, FP.P, T)
+var intMatrix = generateInternalMatrix(T, FP.P)
 
 // TODO: Figure out how to implement internal matrix
 
 var poseidon2ParamsT3 = Poseidon2Params{
-	T: T,
+	T:  T,
 	FP: FP,
-	R: R,
+	R:  R,
 	M: LinearLayers{
 		Me: extMatrix,
-		Mi: extMatrix,
+		Mi: intMatrix,
 	},
 	C: C,
 }
